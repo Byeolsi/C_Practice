@@ -1,0 +1,97 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Stack {
+	int Num;
+	struct Stack *p_next;
+} Stack;
+
+Stack *push_num (Stack *top, int InsertN){
+	Stack *NewStack;
+
+	NewStack = (Stack *)malloc(sizeof(Stack));
+	NewStack->Num = InsertN;
+
+	NewStack->p_next = top;
+	top = NewStack;
+
+	return top;
+}
+
+int size_num (Stack *P){
+	int size = 0;
+	
+	while (P != NULL){
+		P = P->p_next;
+		size++;
+	}
+
+	return size;
+}
+
+Stack *pop_num (Stack *top){
+	Stack *DEL = top;
+
+	top = top->p_next;
+	free(DEL);
+
+	return top;
+}
+
+void freeAllStack(Stack *top){
+	while (top != NULL){
+		top = pop_num(top);
+	}
+}
+
+int main (void){
+	int i, OrderN, InsertN;
+	char Order[6];
+
+	Stack *top = NULL, *P = NULL;
+
+	scanf("%d", &OrderN);
+	if (1 <= OrderN && OrderN <= 10000){
+		for (i = 0 ; i < OrderN ; i++){
+			scanf("%s", Order);
+			if (strcmp(Order, "push") == 0){
+				scanf("%d", &InsertN);
+				top = push_num(top, InsertN);
+			}
+
+			else if (strcmp(Order, "pop") == 0){
+				if (top == NULL){
+					printf("%d\n", -1);
+				}
+				else {
+					printf("%d\n", top->Num);
+					top = pop_num(top);
+				}
+			}
+			else if (strcmp(Order, "size") == 0){
+				printf("%d\n", size_num(top));
+			}
+			else if (strcmp(Order, "empty") == 0){
+				if (top == NULL){
+					printf("%d\n", 1);
+				}
+				else {
+					printf("%d\n", 0);
+				}
+			}
+			else if (strcmp(Order, "top") == 0){
+				if (top == NULL){
+					printf("%d\n", -1);
+				}
+				else {
+					printf("%d\n", top->Num);
+				}
+			}
+		}
+	}
+	freeAllStack(top);
+
+	return 0;
+}
